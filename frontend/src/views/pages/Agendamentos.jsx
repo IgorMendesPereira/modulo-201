@@ -50,7 +50,8 @@ class Agendamentos extends React.Component {
                 open: false,
                 date: null
             },
-            pivos: []
+            pivos: [],
+            time_stamp: 'carregando..'
         };
 
         this.handleDayClick = this.handleDayClick.bind(this)
@@ -80,16 +81,23 @@ class Agendamentos extends React.Component {
                 this.setState({
                     pivo_name: res.filter((pivo) => {
                         return pivo.modulo_id === this.modulo_id;
-                    })[0].pivo_name
+                    })[0].pivo_name,
+
+                    time_stamp: res.filter((pivo) => {
+                        return pivo.modulo_id === this.modulo_id;
+                    })[0].time_stamp
                 })
             ))
 
         fetch(`${hostname}/status_pivos/`) //TODO No futuro filtrar por fazenda, como trabalhamos localmente nao 
             .then(res => res.json())
-            .then(res => this.setState({ status_pivos: res }))
+            .then(res => this.setState({ status_pivos: res }, console.log(res)))
 
         socket.on('update_status', (status) => {
             this.setState({ status_pivos: status })
+            if (status.modulo_id === this.modulo_id) {
+                this.setState({ time_stamp: status.time_stamp })
+            }
             store.addNotification({
                 title: "Mensagem!",
                 message: "Status Atualizado!",
@@ -145,7 +153,9 @@ class Agendamentos extends React.Component {
 
                             <CardHeader color="primary" className={classes.cardHeader}>
 
-                                <h4>Pivô {this.state.pivo_name}</h4>
+
+                                <h4>Pivô {this.state.pivo_name} - Atualizado a ultima vez: {this.state.time_stamp}</h4>
+
 
                             </CardHeader>
                             <GridContainer>

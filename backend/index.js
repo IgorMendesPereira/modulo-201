@@ -50,10 +50,8 @@ algum modelo de alguma tabela e precise reseta-la para aplicar
 as mudancas
 */
 
-
-
 db.sequelize.sync().then(() => {
-  server.listen(PORT, err => {
+  server.listen(PORT, (err) => {
     if (err) {
       console.log('Erro ao colocar servidor para ouvir', err);
     } else {
@@ -63,29 +61,29 @@ db.sequelize.sync().then(() => {
 });
 
 const localIpUrl = require('local-ip-url');
-localIpUrl()
+localIpUrl();
 
-console.log("Ip BE", localIpUrl())
+console.log('Ip BE', localIpUrl());
 
 const socket = require('./server/socket'); //Integra o servidor socket io com o nosso servidor HTTP
 socket.setup(server);
 socket.start();
 
 if (platform.getOption() === platform.options.bb) {
-  console.log('Plataforma detectada: BB')
+  console.log('Plataforma detectada: BB');
 
   setInterval(() => {
     concentrador.sincronizarIntencoesComPivos();
   }, 5000);
 
   setInterval(() => {
-    concentrador.publishAll()
-  }, 60000)
+    concentrador.publishAll();
+  }, 60000);
 }
 
 setInterval(() => {
-  platform.check()
-}, 10000)
+  platform.check();
+}, 10000);
 
 //TESTE DE NOTIFICAÇÃO:
 //Cria uma notificação e a envia para ser mostrada
@@ -95,8 +93,9 @@ setInterval(() => {
 
 app.post('/subscribe', (req, res) => {
   const subscription = req.body;
-  res.status(201).json()
-  const payload = JSON.stringify({ title: 'Pivo Alterado' })
-  webpush.sendNotification(subscription, payload).catch(err => console.error(err))
+  res.status(201).json();
+  const payload = JSON.stringify({ title: 'Pivo Alterado' });
+  webpush
+    .sendNotification(subscription, payload)
+    .catch((err) => console.error(err));
 });
-
