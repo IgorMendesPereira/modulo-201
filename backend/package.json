@@ -35,7 +35,7 @@
     "socket.io": "2.2.0",
     "socket.io-client": "2.2.0",
     "validate": "^5.1.0",
-    "validator": "^13.0.0",
+    "validator": "^13.7.0",
     "web-push": "^3.4.3"
   },
   "devDependencies": {
